@@ -1,0 +1,22 @@
+name: Build hzcommfix.so
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-linux-library:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: |
+          gcc --version
+          make -C server/linux
+      - name: Show imported symbols
+        run: nm -D server/linux/hzcommfix.so
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hzcommfix-linux-x86_64
+          path: server/linux/hzcommfix.so
