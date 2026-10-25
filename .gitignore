@@ -1,0 +1,15 @@
+# Build output
+*.so
+*.o
+
+# Game files and mod build output are never committed
+*.pak
+*.uasset
+*.uexp
+*.ubulk
+*.umap
+*.utoc
+*.ucas
+*.exe
+*.bak
+*.zip
