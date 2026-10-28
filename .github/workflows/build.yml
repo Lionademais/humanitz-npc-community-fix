@@ -1,4 +1,4 @@
-name: Build hzcommfix.so
+name: Build
 
 on:
   push:
@@ -6,17 +6,20 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-linux-library:
+  build:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - name: Build
+      - name: Build hzcommfix.so
         run: |
           gcc --version
-          make -C server/linux
-      - name: Show imported symbols
-        run: nm -D server/linux/hzcommfix.so
+          gcc -O2 -shared -fPIC -o shim/hzcommfix.so shim/hzcommfix.c
+          strip --strip-unneeded shim/hzcommfix.so
+          sha256sum shim/hzcommfix.so
+          nm -D shim/hzcommfix.so
+      - name: Check that every Python tool compiles
+        run: python3 -m py_compile tools/*.py release/servidor/extras/humanitz_npc_patcher.py
       - uses: actions/upload-artifact@v4
         with:
           name: hzcommfix-linux-x86_64
-          path: server/linux/hzcommfix.so
+          path: shim/hzcommfix.so
