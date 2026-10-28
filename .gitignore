@@ -1,15 +1,12 @@
-# Build output
-*.so
-*.o
-
-# Game files and mod build output are never committed
+originais/
+build/
+paks/
+release/dist/
+release/github/
 *.pak
-*.uasset
-*.uexp
-*.ubulk
-*.umap
-*.utoc
-*.ucas
-*.exe
-*.bak
-*.zip
+*.so
+*.bin
+*.sav
+*.dmp
+build.local.sh
+__pycache__/
