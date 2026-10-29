@@ -1,15 +1,15 @@
-# SHA-256 of the files distributed on Nexus Mods and in the GitHub release, version 1.0.2 (for HumanitZ 1.1B)
+# SHA-256 of the files distributed on Nexus Mods and in the GitHub release, version 1.0.3 (for HumanitZ 1.1B)
 
-# NPCCommunityFix_DedicatedServer_v1.0.2.zip (extracted into the server root)
-df179f5f14633a8ce3df9968538c509ba234af267028dffb61517b9a2a036460  NPCCommunityFix_DedicatedServer_v1.0.2.zip
-f84ad8194b0223d36ae6f4726c5b44876c2235fe6fcac5383cf49a4fe58316a6  HumanitZServer/Content/Paks/NPCCommunityFix_Server_P.pak
+# NPCCommunityFix_DedicatedServer_v1.0.3.zip (extracted into the server root)
+57653f5e0f438702b1f6f8d5b84be1a7930a59d6f71a1edf6f21ea91c5c480bc  NPCCommunityFix_DedicatedServer_v1.0.3.zip
+c511e0eaa822150a0cc7d1ed0266868e77d5eb098f74f476f04ccd6f0fb7b1fa  HumanitZServer/Content/Paks/NPCCommunityFix_Server_P.pak
 ba66882fca7a7ed98d62652ae63c98486fbe69c680705145d7a57f32394438d7  HumanitZServer/Binaries/Linux/hzcommfix.so
 fbbd0883e62dbc3ab6624593861cada9b769416f9f3968aadf43ea326cf864e8  HumanitZServer/Binaries/Win64/humanitz_npc_patcher.ps1
 3f4e9b5f1b18a13353ad449d4ae45ff1e0e3f69fdaa6227d808af37c66c8b931  extras/hzcommfix.c
 73962c3c05a1268c2aa6b3b5e77f21c283c8db41479a6aa6b13e097e834b29a1  extras/humanitz_npc_patcher.py
 a8877c87c2a2a6661ee5a33115818ec80d247ac296375043a8c8a385d158c523  LEIA-ME_README.txt
 
-# NPCCommunityFix_Client_v1.0.2.zip
-d4102d38a068b6e9e635c500535e8cbfcd15ef2a958b7065eb1fc7c8eb64a36b  NPCCommunityFix_Client_v1.0.2.zip
-1064b9a406ecbb9e43b933c07b7db25be5e2bdc39078768c664f90aced03110d  NPCCommunityFix_Client_P.pak
+# NPCCommunityFix_Client_v1.0.3.zip
+594ada2ea28f0e87854b28d522d16a07e01c46b721c58d54c0acea326a521670  NPCCommunityFix_Client_v1.0.3.zip
+5e8d3c3b2d9aaa2e1d7df410e224e7548bf948a260d88af34dc5e106673efcbd  NPCCommunityFix_Client_P.pak
 f5aabe9947dadc09c1d0f42d04265a9f33d104de91463d50da3425dee85ab196  LEIA-ME_README.txt

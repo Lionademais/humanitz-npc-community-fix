@@ -29,7 +29,11 @@ py $T/build_charbase.py $O/BP_CharacterBase_cli.bin $B/cli_pre
 py $T/patch_showmsg.py $B/cli_sub/BP_HMZQuestComp.full $B/cli_msg
 py $T/swap_subsys.py $B/cli_msg/BP_HMZQuestComp.full $B/cli BP_HMZQuestComp
 for x in UI_HMZQuest BPK_CommunityBaseLevel1 BP_CharacterBase; do py $T/swap_subsys.py $B/cli_pre/$x.full $B/cli $x; done
-for x in UI_CommunityTab UI_CommunityMemberInfo UI_PreTaskInfo; do py $T/swap_subsys.py $O/${x}_cli.bin $B/cli $x; done
+py $T/patch_traitui.py $O/UI_CommunityMemberInfo_cli.bin $B/cli_pre
+py $T/patch_uitexts.py $B/cli_pre/UI_CommunityMemberInfo.full $B/cli_ui UI_CommunityMemberInfo
+for x in UI_CommunityTab UI_PreTaskInfo; do py $T/patch_uitexts.py $O/${x}_cli.bin $B/cli_ui $x; done
+for x in UI_CommunityMemberInfo UI_CommunityTab UI_PreTaskInfo; do py $T/swap_subsys.py $B/cli_ui/$x.full $B/cli $x; done
+py $T/patch_uitexts.py $O/UI_CommunityMember_cli.bin $B/cli UI_CommunityMember   # nao usa o subsistema: sem swap_subsys
 # ---- paks
 I=TSS_Game/KaiWorldEffects/InteractActor; M=TSS_Game/Blueprints/Objective_System/System; Q=TSS_Game/KaiAIMapTest/KaiHumanAI/Quest; G=TSS_Game/Blueprints/System; C=BuildingSystem/Blueprints
 W=$Q/QuestPreset/Random/Recruit/Widgets
@@ -39,7 +43,8 @@ py $T/mkpak.py paks/zz_CommunityFix_P.pak "../../../" $(pk HumanitZServer $C C-B
    $(pk HumanitZServer $M BP_GameModeSave srv)
 py $T/mkpak.py paks/HumanitZ_CommunityFix_P.pak "../../../" $(pk HumanitZ $Q BP_HMZQuestComp cli) $(pk HumanitZ $Q UI_HMZQuest cli) \
    $(pk HumanitZ $I BP_BaseInteractActor cli) $(pk HumanitZ $I/Child BPK_CommunityBaseLevel1 cli) $(pk HumanitZ $G BP_CharacterBase cli) \
-   $(pk HumanitZ $W UI_CommunityTab cli) $(pk HumanitZ $W UI_CommunityMemberInfo cli) $(pk HumanitZ $W UI_PreTaskInfo cli)
+   $(pk HumanitZ $W UI_CommunityTab cli) $(pk HumanitZ $W UI_CommunityMemberInfo cli) $(pk HumanitZ $W UI_PreTaskInfo cli) \
+   $(pk HumanitZ $W UI_CommunityMember cli)
 sha1sum paks/*.pak
 # ---- confere imports nativos contra os executaveis (UFUNCTION inexistente = import nulo = crash)
 # caminhos dos executaveis em build.local.sh (nao versionado): HZ_SERVER_BIN=... HZ_CLIENT_EXE=...

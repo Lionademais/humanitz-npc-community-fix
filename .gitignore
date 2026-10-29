@@ -3,6 +3,13 @@ build/
 paks/
 release/dist/
 release/github/
+teste/
+versoes/
+servidores_teste/
+jogo/
+analise/
+outros/
+pylib/
 *.pak
 *.so
 *.bin
