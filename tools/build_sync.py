@@ -58,7 +58,7 @@ F = {}
 for n in ('Map_Add', 'Map_Find', 'Map_Clear', 'Map_Keys', 'Map_Values'): F[n] = p.add_import('/Script/CoreUObject', 'Function', MAPLIB, n)
 for n in ('Array_Clear', 'Array_Append', 'Array_Add', 'Array_Length'): F[n] = p.add_import('/Script/CoreUObject', 'Function', C_ARRLIB, n)
 for n in ('Set_ToArray', 'Set_Clear', 'Set_Add'): F[n] = p.add_import('/Script/CoreUObject', 'Function', C_SETLIB, n)
-for n in ('Less_IntInt', 'Add_IntInt', 'EqualEqual_IntInt'): F[n] = p.add_import('/Script/CoreUObject', 'Function', C_MATHLIB, n)
+for n in ('Less_IntInt', 'Add_IntInt', 'EqualEqual_IntInt', 'Subtract_IntInt', 'Greater_IntInt'): F[n] = p.add_import('/Script/CoreUObject', 'Function', C_MATHLIB, n)
 if SERVER:
     S_ACTION, S_DECAY, S_INV, S_TRAIT = (p.add_import('/Script/CoreUObject', 'ScriptStruct', TSS, n)
                                          for n in ('NPCActionInfo', 'NPCStatDecayConfig', 'NPCInventoryItem', 'NPCTraitInfo'))
@@ -81,6 +81,16 @@ if SERVER:
     C_LV = {n: p.add_import('/Script/Engine', 'BlueprintGeneratedClass',
                             p.add_import('/Script/CoreUObject', 'Package', 0, f'{BASEDIR}{n}'), f'BPK_CommunityBaseLevel{n}_C')
             for n in (1, 2, 3, 4)}
+if not SERVER:
+    C_STRLIB = p.find_import('Class', 'KismetStringLibrary') or p.add_import('/Script/CoreUObject', 'Class', ENGPKG, 'KismetStringLibrary')
+    C_TXTLIB = p.find_import('Class', 'KismetTextLibrary') or p.add_import('/Script/CoreUObject', 'Class', ENGPKG, 'KismetTextLibrary')
+    for n in ('FindSubstring', 'Left', 'RightChop', 'Concat_StrStr', 'StartsWith', 'EndsWith', 'Mid', 'Len', 'Replace', 'EqualEqual_StrStr'):
+        F[n] = p.add_import('/Script/CoreUObject', 'Function', C_STRLIB, n)
+    C_I18N = p.find_import('Class', 'KismetInternationalizationLibrary') or p.add_import('/Script/CoreUObject', 'Class', ENGPKG, 'KismetInternationalizationLibrary')
+    F['GetCurrentCulture'] = p.add_import('/Script/CoreUObject', 'Function', C_I18N, 'GetCurrentCulture')
+    for n in ('FindTextInLocalizationTable', 'Conv_TextToString'): F[n] = p.add_import('/Script/CoreUObject', 'Function', C_TXTLIB, n)
+    F['Array_Set'] = p.add_import('/Script/CoreUObject', 'Function', C_ARRLIB, 'Array_Set')
+    F['Map_Length'] = p.add_import('/Script/CoreUObject', 'Function', MAPLIB, 'Map_Length')
 DTDIR = '/Game/TSS_Game/KaiAIMapTest/KaiHumanAI/Quest/QuestPreset/Random/Recruit/Data/'
 DTS = []
 for dt in ('DT_NPC_Responses', 'DT_Recruit_PositiveTraits', 'DT_Recruit_NegativeTraits'):
@@ -128,8 +138,46 @@ def mem_(i, j): return aref(mems(i), j)
 REPL = [('SyncCPKeys', 'namearr'), ('SyncCPVals', 'floatarr'), ('SyncCPCount', 'intarr'), ('SyncMTasks', 'bytearr'), ('SyncMTCount', 'intarr'),
         ('SyncMFollow', 'bytearr'), ('SyncMFCount', 'intarr'), ('SyncMPKeys', 'namearr'), ('SyncMPVals', 'floatarr'), ('SyncMPCount', 'intarr')]
 TEMPS = [(n, 'int') for n in ('SyncI', 'SyncJ', 'SyncK', 'SyncG', 'SyncCC', 'SyncCT', 'SyncCF', 'SyncCP')] + \
-        [('SyncTmpBytes', 'bytearr'), ('SyncTmpKeys', 'namearr'), ('SyncTmpVals', 'floatarr'), ('SyncMsgW', 'widget')]
+        [('SyncTmpBytes', 'bytearr'), ('SyncTmpKeys', 'namearr'), ('SyncTmpVals', 'floatarr'), ('SyncMsgW', 'widget'),
+         ('SyncStr', 'str'), ('SyncTxt', 'text'), ('SyncTrMap', 'strmap'),
+         ('SyncStrP', 'str'), ('SyncStrB', 'str'), ('SyncStrX', 'str'), ('SyncStrC', 'str'),
+         ('SyncTrBack', 'strmap'), ('SyncStrO', 'str'), ('SyncStrL', 'str')]
+# SyncStr/SyncTxt/SyncTrMap: traducao das falas (ChatHistory) no cliente; existem dos dois lados p/ layout igual
+# SyncTrBack (linha traduzida -> linha original em ingles) / SyncStrO: a traducao e gravada na copia replicada do cliente;
+# para trocar de idioma em jogo, cada linha volta ao ingles antes de traduzir de novo. SyncStrL: idioma da ultima passada;
+# no mesmo idioma, linhas ja traduzidas sao puladas (so as novas passam pela traducao)
 # SyncMsgW: janela do aviso de comunidade restaurada (so cliente, patch_showmsg.py); existe dos dois lados p/ layout igual
+
+TRMAP, TEMPLATES = [], []
+if not SERVER:
+    # Tabela de traducao do historico (SyncTrMap): "ingles" -> chave oficial (DT_NPC_Responses, DT_TaskConfig, via locres
+    # ingles) e "<lingua>|ingles" -> traducao propria (tools/chat_translations.py). TEMPLATES: modelos com {X}.
+    import re as _re
+    from locres import read as _read_locres
+    from chat_translations import OWN, ALIASES, NESTED
+    _root = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'originais')
+    _en = _read_locres(os.path.join(_root, 'locres', 'Game_en.locres'))
+    _seen, _official = set(), {}
+    for _dtf in ('DT_NPC_Responses_srv.bin', 'DT_TaskConfig_srv.bin'):
+        _dt = open(os.path.join(_root, _dtf), 'rb').read()
+        for _m in _re.finditer(rb'\x21\x00\x00\x00([0-9A-F]{32})\x00', _dt):
+            _q = _m.end(); _n = struct.unpack_from('<i', _dt, _q)[0]; _q += 4
+            _src = _dt[_q:_q - 2 * _n].decode('utf-16-le').rstrip('\0') if _n < 0 else _dt[_q:_q + _n].decode('latin1').rstrip('\0')
+            _key = _m.group(1).decode()
+            for _txt in (_src, _en.get(('', _key))):  # texto do asset e o exibido em ingles (o servidor usa o exibido)
+                if _txt and _txt not in _seen: _seen.add(_txt); _official[_txt] = _key; TRMAP.append((_txt, _key))
+    # textos que os blueprints dos NPCs escrevem direto no historico (originais/historico/*.bin): chave -> ingles exibido
+    for _bf in sorted(os.listdir(os.path.join(_root, 'historico'))):
+        _bd = open(os.path.join(_root, 'historico', _bf), 'rb').read()
+        for _key in sorted({_m.group(1).decode() for _m in _re.finditer(rb'([0-9A-F]{32})\x00', _bd)}):
+            _txt = _en.get(('', _key))
+            if _txt and _txt not in _seen: _seen.add(_txt); _official[_txt] = _key; TRMAP.append((_txt, _key))
+    for _a, _b in ALIASES.items(): TRMAP.append((_a, _official[_b]))
+    for _en_t, _tr in OWN.items():
+        for _lang, _t in _tr.items(): TRMAP.append((f'{_lang}|{_en_t}', _t))
+    for _t in sorted({t for t in list(_official) + list(ALIASES) + list(OWN) if '{X}' in t}, key=lambda t: (-len(t), t)):  # ordem fixa
+        _a, _, _b = _t.partition('{X}'); TEMPLATES.append((_a, _b, _t, _t in NESTED))
+    print(f'traducao do historico: {len(TRMAP)} entradas, {len(TEMPLATES)} modelos com nome')
 
 k = Asm(B)
 k.st(cat(op(0x5F), local(L_OWNER), final(F_GETOWNER)))
@@ -258,6 +306,111 @@ k.st(inc('SyncK')); k.st(inc('SyncCP')); k.jmp('c_mp'); k.label('c_mp_end')
 k.st(inc('SyncJ')); k.st(inc('SyncG')); k.jmp('c_mj'); k.label('c_mj_end')
 k.st(inc('SyncI')); k.jmp('c_ci')
 k.label('c_done')
+if not SERVER:
+    # Historico (ChatHistory): o servidor grava as linhas ja em ingles ("<PR>[NPC]</>: fala",
+    # "<PR>[Tarefa]</>-<SP>[NPC]</>: fala",
+    # "X has died."...). A cada 2 s cada linha e traduzida para a lingua do jogo antes de ir ao subsistema:
+    # nome da tarefa e falas pela traducao oficial (chave + FindTextInLocalizationTable), modelos com {X} (nome no meio)
+    # e frases fixas do C++ pelas traducoes proprias. Linhas ja traduzidas ou desconhecidas ficam como estao.
+    def ustr_(t):
+        try: return cat(op(0x1F), (t.encode('ascii') + b'\0', len(t) + 1))
+        except UnicodeEncodeError: b = t.encode('utf-16-le') + b'\0\0'; return cat(op(0x34), (b, len(b)))
+    def sfn(n, *a): return callmath(F[n], *a)
+    def bytec(v): return cat(op(0x24), (bytes([v]), 1))
+    TR, R, P, Bd, X, CP = (inst(n) for n in ('SyncTrMap', 'SyncStr', 'SyncStrP', 'SyncStrB', 'SyncStrX', 'SyncStrC'))
+    def setstr(n, rhs): return letv(n, rhs)
+    lab = [0]
+    def lookup(src, ok):  # R = traducao de src (propria da lingua ou oficial); pula para ok se achou
+        lab[0] += 1; nxt = f'lk{lab[0]}'
+        k.jnot(nxt, mapl('Map_Find', TR, sfn('Concat_StrStr', CP, src), R)); k.jmp(ok)
+        k.label(nxt); nxt2 = f'lk{lab[0]}b'
+        k.jnot(nxt2, mapl('Map_Find', TR, src, R))
+        k.jnot(nxt2, sfn('FindTextInLocalizationTable', ustr_(''), R, inst('SyncTxt')))
+        k.st(setstr('SyncStr', sfn('Conv_TextToString', inst('SyncTxt')))); k.jmp(ok)
+        k.label(nxt2)
+    k.jnot('tr_ok', math('EqualEqual_IntInt', mapl('Map_Length', TR), intc(0)))
+    for a_, b_ in TRMAP: k.st(mapl('Map_Add', TR, ustr_(a_), ustr_(b_)))
+    k.label('tr_ok')
+    k.st(setstr('SyncStrC', sfn('Concat_StrStr', sfn('Left', sfn('GetCurrentCulture'), intc(2)), ustr_('|'))))
+    k.st(letv('SyncI', intc(0)))
+    k.label('t_ci'); k.jnot('t_end', math('Less_IntInt', inst('SyncI'), length(COMMS)))
+    k.st(letv('SyncJ', intc(0)))
+    k.label('t_mj'); k.jnot('t_mj_end', math('Less_IntInt', inst('SyncJ'), length(mems(inst('SyncI')))))
+    CH = member('ChatHistory', S_REC, mem_(inst('SyncI'), inst('SyncJ')))
+    E = aref(CH, inst('SyncK'))
+    k.st(letv('SyncK', intc(0)))
+    k.label('t_k'); k.jnot('t_k_end', math('Less_IntInt', inst('SyncK'), length(CH)))
+    # linha ja traduzida: no mesmo idioma, pula; se o idioma mudou, volta ao original em ingles e traduz de novo
+    k.jnot('t_orig', mapl('Map_Find', inst('SyncTrBack'), E, R))
+    k.jnot('t_volta', sfn('EqualEqual_StrStr', inst('SyncStrL'), CP))
+    k.jmp('t_prox')
+    k.label('t_volta'); k.st(arr('Array_Set', CH, inst('SyncK'), R, op(0x28)))
+    k.label('t_orig'); k.st(setstr('SyncStrO', E))
+    # prefixo "[..]: " e corpo
+    k.st(letv('SyncCT', sfn('FindSubstring', E, ustr_('</>: '), op(0x28), op(0x28), intc(-1))))
+    k.st(setstr('SyncStrP', ustr_(''))); k.st(setstr('SyncStrB', E))
+    k.jnot('t_pre', math('Less_IntInt', intc(-1), inst('SyncCT')))
+    CUT = math('Add_IntInt', inst('SyncCT'), intc(5))
+    k.st(setstr('SyncStrP', sfn('Left', E, CUT))); k.st(setstr('SyncStrB', sfn('RightChop', E, CUT)))
+    # nome da tarefa em "[Tarefa]-[NPC]: "
+    k.st(letv('SyncCF', sfn('FindSubstring', P, ustr_(']</>-<SP>['), op(0x28), op(0x28), intc(-1))))
+    k.jnot('t_pre', math('Greater_IntInt', inst('SyncCF'), intc(5)))
+    k.jnot('t_pre', sfn('StartsWith', P, ustr_('<PR>['), bytec(0)))
+    lookup(sfn('Mid', P, intc(5), math('Subtract_IntInt', inst('SyncCF'), intc(5))), 't_task')
+    k.jmp('t_pre')
+    k.label('t_task'); k.st(setstr('SyncStrP', sfn('Concat_StrStr', sfn('Concat_StrStr', ustr_('<PR>['), R), sfn('RightChop', P, inst('SyncCF')))))
+    k.label('t_pre')
+    # corpo: frase exata
+    lookup(Bd, 't_exact')
+    # modelos com {X}
+    LEN = sfn('Len', Bd)
+    for ti, (a_, b_, t_, nested) in enumerate(TEMPLATES):
+        nx = f't_m{ti}'
+        if a_: k.jnot(nx, sfn('StartsWith', Bd, ustr_(a_), bytec(0)))
+        if b_: k.jnot(nx, sfn('EndsWith', Bd, ustr_(b_), bytec(0)))
+        k.jnot(nx, math('Less_IntInt', intc(len(a_) + len(b_)), LEN))
+        k.st(setstr('SyncStrX', sfn('Mid', Bd, intc(len(a_)), math('Subtract_IntInt', LEN, intc(len(a_) + len(b_))))))
+        if nested:
+            lookup(X, f't_n{ti}'); k.jmp(f't_nd{ti}')
+            k.label(f't_n{ti}'); k.st(setstr('SyncStrX', R)); k.label(f't_nd{ti}')
+        lookup(ustr_(t_), f't_ok{ti}'); k.jmp(nx)
+        k.label(f't_ok{ti}'); k.st(setstr('SyncStrB', sfn('Replace', R, ustr_('{X}'), X, bytec(0)))); k.jmp('t_set')
+        k.label(nx)
+    k.jmp('t_set')
+    k.label('t_exact'); k.st(setstr('SyncStrB', R))
+    k.label('t_set')
+    k.st(arr('Array_Set', CH, inst('SyncK'), sfn('Concat_StrStr', P, Bd), op(0x28)))
+    k.st(mapl('Map_Add', inst('SyncTrBack'), E, inst('SyncStrO')))
+    k.label('t_prox'); k.st(inc('SyncK')); k.jmp('t_k')
+    k.label('t_k_end'); k.st(inc('SyncJ')); k.jmp('t_mj')
+    k.label('t_mj_end'); k.st(inc('SyncI')); k.jmp('t_ci')
+    k.label('t_end'); k.st(setstr('SyncStrL', CP))
+    if os.environ.get('HZ_DIAG_TRAITS'):
+        # DIAGNOSTICO (pak de teste apenas): 1a linha do historico de cada membro vira o estado que o cliente tem
+        for n in ('Conv_IntToString', 'Conv_BoolToString', 'Conv_FloatToString'): F[n] = p.add_import('/Script/CoreUObject', 'Function', C_STRLIB, n)
+        F['ShouldRevealTraits'] = p.add_import('/Script/CoreUObject', 'Function', SUBSYS, 'ShouldRevealTraits')
+        F['GetTimeSeconds'] = p.add_import('/Script/CoreUObject', 'Function', imp('Class', 'GameplayStatics'), 'GetTimeSeconds')
+        def cc(*xs):
+            r = xs[0]
+            for x in xs[1:]: r = sfn('Concat_StrStr', r, x)
+            return r
+        k.st(letv('SyncI', intc(0)))
+        k.label('d_ci'); k.jnot('d_end', math('Less_IntInt', inst('SyncI'), length(COMMS)))
+        k.st(letv('SyncJ', intc(0)))
+        k.label('d_mj'); k.jnot('d_mj_end', math('Less_IntInt', inst('SyncJ'), length(mems(inst('SyncI')))))
+        M_ = mem_(inst('SyncI'), inst('SyncJ')); CH_ = member('ChatHistory', S_REC, M_)
+        REV = context(local(L_SUB), final(F['ShouldRevealTraits'], M_, cat(op(0x1E), (struct.pack('<f', 3.0), 4))))
+        LINE = cc(ustr_('<PR>[DBG]</>: NT='), sfn('Conv_IntToString', length(member('NegativeTraits', S_REC, M_))),
+                  ustr_(' PT='), sfn('Conv_IntToString', length(member('PositiveTraits', S_REC, M_))),
+                  ustr_(' P='), sfn('Conv_IntToString', mapl('Map_Length', member('Params', S_REC, M_))),
+                  ustr_(' REV='), sfn('Conv_BoolToString', REV),
+                  ustr_(' t='), sfn('Conv_FloatToString', callmath(F['GetTimeSeconds'], op(0x17))))
+        k.jnot('d_add', math('Less_IntInt', intc(0), length(CH_)))
+        k.st(arr('Array_Set', CH_, intc(0), LINE, op(0x28))); k.jmp('d_next')
+        k.label('d_add'); k.st(arr('Array_Add', CH_, LINE))
+        k.label('d_next'); k.st(inc('SyncJ')); k.jmp('d_mj')
+        k.label('d_mj_end'); k.st(inc('SyncI')); k.jmp('d_ci')
+        k.label('d_end')
 k.st(mapl('Map_Clear', inst('CommSyncMap')))
 k.st(mapl('Map_Add', inst('CommSyncMap'), inst('PlayerUID'), inst('CommSync')))
 k.st(context(local(L_SUB), final(F_SETDATA, inst('CommSyncMap'))))
@@ -309,6 +462,9 @@ def typed(name, t, pflags):
     if t == 'floatarr': return fprop('ArrayProperty', name, pflags, 16) + fprop('FloatProperty', name, 0, 4)
     if t == 'intarr': return fprop('ArrayProperty', name, pflags, 16) + fprop('IntProperty', name, 0, 4)
     if t == 'widget': return fprop('ObjectProperty', name, pflags, 8, I32(C_USERWIDGET))
+    if t == 'str': return fprop('StrProperty', name, pflags, 16)
+    if t == 'text': return fprop('TextProperty', name, pflags, 24)
+    if t == 'strmap': return fprop('MapProperty', name, pflags, 80) + fprop('StrProperty', name, 0, 16) + fprop('StrProperty', name + '_Value', 0, 16)
     raise ValueError(t)
 newprops = fprop('StructProperty', 'CommSync', 0x10025, 16, I32(S_DATAARR))
 newprops += fprop('MapProperty', 'CommSyncMap', 0x10005, 80) + fprop('StructProperty', 'CommSyncMap', 0, 16, I32(imp('ScriptStruct', 'Guid'))) \
