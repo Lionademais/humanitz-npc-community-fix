@@ -40,7 +40,7 @@ Full history in the [Changelog](#changelog).
 
 | Path | What it is |
 |---|---|
-| `build.sh` | Rebuilds both paks from the game's original assets (`originals/`, not included). |
+| `build.sh` | Rebuilds both paks from the game's original assets (`originais/`, not included). |
 | `release.sh` | Packs the paks, the Linux library and the scripts into the two release zips. |
 | `shim/hzcommfix.c` | Source of `hzcommfix.so`, the Linux server library (the only compiled binary in the mod). |
 | `tools/` | Python tools (no external dependencies) that read and rebuild cooked UE 4.27 packages, assemble Kismet bytecode, read the game's localization files and write the paks. |
@@ -131,7 +131,7 @@ Safety checks:
 
 ### 1. Extract the original assets and texts
 
-The game's assets and texts are not distributed. Extract each asset from the game's own `.pak` into `originals/`, as a
+The game's assets and texts are not distributed. Extract each asset from the game's own `.pak` into `originais/` (Portuguese for "originals"), as a
 single `.bin` file (`.uasset` and `.uexp` concatenated):
 
 ```sh
@@ -148,7 +148,7 @@ Some data tables are stored without compression in the pak and do not show up in
 `_srv` come from the dedicated server (`HumanitZServer`), files ending in `_cli` from the game client (`HumanitZ`):
 
 ```
-originals/
+originais/
   quest_srv.bin  quest_cli.bin                      (BP_HMZQuestComp)
   BPK_CommunityBaseLevel1_srv.bin  BPK_CommunityBaseLevel1_cli.bin
   BP_BaseInteractActor_srv.bin  BP_BaseInteractActor_cli.bin
