@@ -1,10 +1,13 @@
-HumanitZ - NPC Community Dedicated Fix - Dedicated Server
-==========================================================
+HumanitZ - NPC Mechanics on Dedicated Server (antes/formerly: NPC Community Dedicated Fix) - Dedicated Server, native 1.0.10
+============================================================================================================================
 
 PORTUGUES
 ---------
 Faz o recrutamento e o gerenciamento de NPCs (Comunidade, versao 1.1) funcionarem em servidor dedicado.
 O servidor e a fonte da verdade. Os jogadores so precisam do mod de cliente (um pak, instalavel pelo Vortex).
+
+Servidor alugado, sem acesso ao executavel ou a inicializacao? Use a outra opcao do mod, PAK-ONLY
+(NPCMechanics_PakOnly_LinuxServer/WindowsServer): so arquivos de pak, mesmo cliente. Instale so uma das duas.
 
 O servidor precisa de duas coisas: o pak e uma correcao que habilita o subsistema nativo de comunidade
 (HZCommunityNPCSubSys), que o jogo nao cria em servidor dedicado. E ele quem simula tarefas, fome e viagens e salva
@@ -12,7 +15,7 @@ os membros.
 
 PASSO 1 - Copiar os arquivos (servidor parado)
  Extraia o zip na pasta raiz do servidor (a que contem a pasta HumanitZServer). Cada arquivo cai no lugar certo:
-   HumanitZServer/Content/Paks/NPCCommunityFix_Server_P.pak     o mod
+   HumanitZServer/Content/Paks/NPCCommunityFix_Server_P.pak/.ucas/.utoc/.sig   o mod (os quatro arquivos juntos)
    HumanitZServer/Binaries/Linux/hzcommfix.so                   correcao para Linux
    HumanitZServer/Binaries/Win64/humanitz_npc_patcher.ps1       correcao para Windows
    extras/                                                      alternativa e codigo-fonte (opcional)
@@ -50,6 +53,13 @@ IMPORTANTE - o passo 2 precisa continuar ativo
 
 PASSO 3 - Iniciar o servidor.
 
+Proteções da 1.0.4 (Linux)
+- O .sig ao lado do pak identifica o build do jogo para o qual o mod foi feito. Copie os quatro arquivos juntos
+  (.pak, .ucas, .utoc, .sig). Faltando arquivo ou com build diferente, o servidor recusa subir, para não gravar o mundo
+  sem o mod. Depois de atualizar o jogo, espere a versão do mod para o novo build.
+- Saved/HZ_Cofre guarda cópias das listas de recrutáveis e comunidades e repara o mundo ao iniciar, se elas se perderem.
+- HZ_SEM_TRAVA=1 no ambiente libera a trava. Use só sabendo o risco: o mundo pode perder os vínculos com os NPCs.
+
 Observacoes
 - Os patchers sao texto (podem ser lidos antes de rodar) e acham o ponto pelo conteudo, recusando versoes
   desconhecidas. Se o jogo mudar essa funcao, nada e alterado ate sair uma nova versao do mod.
@@ -57,12 +67,16 @@ Observacoes
 - Comunidades criadas antes do mod em servidor dedicado nunca foram registradas: desmonte a Base da Comunidade e
   construa de novo depois de instalar.
 - Desinstalar: remova o pak e o LD_PRELOAD (ou restaure o executavel pelo patcher / valide os arquivos do servidor).
-- Servidor e todos os jogadores precisam da mesma versao do mod.
+- Versoes: este servidor nativo 1.0.10 usa o cliente 1.0.8 (o mesmo da pak-only 1.1.2). O numero do servidor sobe
+  quando so ele muda: nao existe cliente 1.0.10. Todos os jogadores precisam do cliente 1.0.8.
 
 ENGLISH
 -------
 Makes NPC recruitment and management (Community, version 1.1) work on dedicated servers.
 The server is authoritative. Players only need the client mod (a single pak, installable with Vortex).
+
+Rented server with no access to the executable or the startup? Use the mod's other option, PAK-ONLY
+(NPCMechanics_PakOnly_LinuxServer/WindowsServer): pak files only, same client. Install only one of the two.
 
 The server needs two things: the pak and a fix that enables the native community subsystem (HZCommunityNPCSubSys),
 which the game does not create on dedicated servers. It simulates tasks, hunger and travel and saves the members.
@@ -70,7 +84,7 @@ which the game does not create on dedicated servers. It simulates tasks, hunger 
 STEP 1 - Copy the files (server stopped)
  Extract the zip into the server's root folder (the one containing the HumanitZServer folder). Every file lands in
  the right place:
-   HumanitZServer/Content/Paks/NPCCommunityFix_Server_P.pak     the mod
+   HumanitZServer/Content/Paks/NPCCommunityFix_Server_P.pak/.ucas/.utoc/.sig   the mod (keep the four files together)
    HumanitZServer/Binaries/Linux/hzcommfix.so                   Linux fix
    HumanitZServer/Binaries/Win64/humanitz_npc_patcher.ps1       Windows fix
    extras/                                                      alternative and source code (optional)
@@ -107,6 +121,13 @@ IMPORTANT - step 2 must stay active
 
 STEP 3 - Start the server.
 
+Protections in 1.0.4 (Linux)
+- The .sig next to the pak identifies the game build the mod was made for. Copy all four files together
+  (.pak, .ucas, .utoc, .sig). With a file missing or a different build, the server refuses to start, so the world is
+  never saved without the mod. After a game update, wait for the mod version for the new build.
+- Saved/HZ_Cofre keeps copies of the recruitable and community lists and repairs the world at startup if they are lost.
+- HZ_SEM_TRAVA=1 in the environment disables the lock. Only use it knowing the risk: the world can lose its NPC links.
+
 Notes
 - The patchers are plain text (you can read them before running) and locate the code by content, refusing unknown
   versions. If the game changes this function, nothing is changed until a new mod version is released.
@@ -114,4 +135,5 @@ Notes
 - Communities created on a dedicated server before this mod were never registered: dismantle the Community Base
   and build it again after installing.
 - Uninstall: remove the pak and the LD_PRELOAD (or restore the executable with the patcher / validate server files).
-- The server and all players need the same mod version.
+- Versions: this native server 1.0.10 uses client 1.0.8 (the same as pak-only 1.1.2). The server number goes up when
+  only the server changes: there is no 1.0.10 client. Every player needs client 1.0.8.
