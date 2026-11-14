@@ -1,4 +1,4 @@
-HumanitZ - NPC Mechanics on Dedicated Server (antes/formerly: NPC Community Dedicated Fix) - Client 1.0.8
+HumanitZ - NPC Mechanics on Dedicated Server (antes/formerly: NPC Community Dedicated Fix) - Client 1.0.9
 ==========================================================================================================
 
 PORTUGUES
@@ -12,9 +12,9 @@ Instalacao
   (crie a pasta ~mods se ela nao existir).
 
 Requisitos
-- O servidor precisa da parte de servidor deste mod: a NATIVA 1.0.10 (NPCCommunityFix_DedicatedServer) ou a
-  PAK-ONLY 1.1.2 (NPCMechanics_PakOnly_LinuxServer/WindowsServer). Este cliente 1.0.8 serve as duas.
-  O numero do servidor sobe quando so ele muda: nao existe cliente 1.0.10 nem 1.1.2.
+- O servidor precisa da parte de servidor deste mod: a NATIVA 1.0.11 (NPCCommunityFix_DedicatedServer) ou a
+  PAK-ONLY 1.1.3 (NPCMechanics_PakOnly_LinuxServer/WindowsServer). Este cliente 1.0.9 serve as duas.
+  O numero do servidor sobe quando so ele muda: nao existe cliente 1.0.11 nem 1.1.3.
 - Single-player e partidas hospedadas por voce funcionam normalmente com o mod instalado. Na partida hospedada,
   quem entrar tambem precisa deste pak.
 
@@ -34,9 +34,9 @@ Install
   (create the ~mods folder if it does not exist).
 
 Requirements
-- The server must run the server part of this mod: the NATIVE option 1.0.10 (NPCCommunityFix_DedicatedServer) or the
-  PAK-ONLY option 1.1.2 (NPCMechanics_PakOnly_LinuxServer/WindowsServer). This client 1.0.8 works with both.
-  The server number goes up when only the server changes: there is no 1.0.10 or 1.1.2 client.
+- The server must run the server part of this mod: the NATIVE option 1.0.11 (NPCCommunityFix_DedicatedServer) or the
+  PAK-ONLY option 1.1.3 (NPCMechanics_PakOnly_LinuxServer/WindowsServer). This client 1.0.9 works with both.
+  The server number goes up when only the server changes: there is no 1.0.11 or 1.1.3 client.
 - Single-player and games you host keep working normally with the mod installed. In a hosted game, everyone who
   joins also needs this pak.
 
