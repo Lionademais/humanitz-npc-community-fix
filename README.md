@@ -4,7 +4,7 @@ Source code, build instructions and downloads for the HumanitZ mod **NPC Mechani
 (formerly *NPC Community Dedicated Fix*). It makes the game's own NPC recruitment and Community system work on
 dedicated servers, with the server as the single source of truth.
 
-- Nexus Mods page: https://www.nexusmods.com/games/humanitz/mods/171
+- Nexus Mods page: https://www.nexusmods.com/humanitz/mods/171
 - **Current release: [client 1.0.9, server Native 1.0.11, server Pak-Only 1.1.3](https://github.com/Lionademais/humanitz-npc-community-fix/releases/tag/v1.1.3)**,
   for the HumanitZ update of 2026-11-12, plus an optional camera compatibility patch
 - Companion mod: [NPC Expansion](https://github.com/Lionademais/humanitz-npc-expansion) (Nexus mod 180). On dedicated
