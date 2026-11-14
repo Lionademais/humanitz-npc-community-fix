@@ -1,4 +1,4 @@
-HumanitZ - NPC Mechanics on Dedicated Server (antes/formerly: NPC Community Dedicated Fix) - PAK-ONLY server 1.1.2 (no executable changes)
+HumanitZ - NPC Mechanics on Dedicated Server (antes/formerly: NPC Community Dedicated Fix) - PAK-ONLY server 1.1.3 (no executable changes)
 ==========================================================================================================================================
 
 PORTUGUES
@@ -16,8 +16,8 @@ Qual escolher
 - Instale SO UMA das duas.
 
 Jogadores
-- O cliente e o MESMO das duas opcoes: NPCCommunityFix_Client 1.0.8 (um pak, pelo Vortex ou em Paks\~mods).
-  Servidor pak-only 1.1.2 ou nativo 1.0.10, cliente 1.0.8: o numero do servidor sobe quando so ele muda.
+- O cliente e o MESMO das duas opcoes: NPCCommunityFix_Client 1.0.9 (um pak, pelo Vortex ou em Paks\~mods).
+  Servidor pak-only 1.1.3 ou nativo 1.0.11, cliente 1.0.9: o numero do servidor sobe quando so ele muda.
 
 Este zip vale para UM sistema. Use o do seu servidor:
   NPCMechanics_PakOnly_LinuxServer_v*.zip     servidor dedicado Linux
@@ -45,7 +45,7 @@ Instalacao (formato IoStore: tres arquivos que andam juntos)
 Bom saber
 - Faca backup dos saves antes. A versao pak-only nao tem a protecao do mundo do hzcommfix.so (trava, cofre e reparo).
 - Nada extra e gravado no save: da para voltar a versao nativa sem perder nada.
-- Feito para os servidores de 30/10/2026 (Linux 26333826, Windows 26335264). Depois de cada atualizacao do jogo,
+- Feito para os servidores de 12/11/2026 (Linux 26602664, Windows 26604244). Depois de cada atualizacao do jogo,
   espere a versao do mod para o novo build.
 - Desinstalar: apague os tres arquivos NPCMechanics_PakOnly_Server_P.*.
 
@@ -64,8 +64,8 @@ Which one to pick
 - Install ONLY ONE of them.
 
 Players
-- The client is the SAME for both options: NPCCommunityFix_Client 1.0.8 (one pak, via Vortex or in Paks\~mods).
-  Pak-only server 1.1.2 or native server 1.0.10, client 1.0.8: the server number goes up when only the server changes.
+- The client is the SAME for both options: NPCCommunityFix_Client 1.0.9 (one pak, via Vortex or in Paks\~mods).
+  Pak-only server 1.1.3 or native server 1.0.11, client 1.0.9: the server number goes up when only the server changes.
 
 This zip is for ONE operating system. Use the one that matches your server:
   NPCMechanics_PakOnly_LinuxServer_v*.zip     Linux dedicated server
@@ -94,6 +94,6 @@ Good to know
 - Back up your saves first. The pak-only option does not have the world protection of hzcommfix.so (lock, vault
   and repair).
 - Nothing extra is written to your save: you can switch back to the native option without losing anything.
-- Built for the servers of 30 Oct 2026 (Linux 26333826, Windows 26335264). After every game update, wait for the mod
+- Built for the servers of 12 Nov 2026 (Linux 26602664, Windows 26604244). After every game update, wait for the mod
   version for the new build.
 - Uninstall: delete the three NPCMechanics_PakOnly_Server_P.* files.
