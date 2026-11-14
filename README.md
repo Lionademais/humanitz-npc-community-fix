@@ -169,6 +169,9 @@ also a copy of the character from before the game's NPC update, which loses the 
   version number follows.
 - Credits: the idea and the camera values are by XEM122. No file from that mod is used, only the game's and this mod's.
 - Checked in the code; not tested in game yet.
+- Not using the NPC Mechanics client (single-player or hosted games with NPC Expansion)? Use
+  `NPCExpansion_CameraFreedomPatch_NoMechanics_v1.0.0.zip` from [NPC Expansion](https://github.com/Lionademais/humanitz-npc-expansion)
+  instead. Only one of the two patches at a time.
 
 ## The `.pak` files
 
