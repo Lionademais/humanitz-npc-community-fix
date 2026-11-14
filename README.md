@@ -5,15 +5,17 @@ Source code, build instructions and downloads for the HumanitZ mod **NPC Mechani
 dedicated servers, with the server as the single source of truth.
 
 - Nexus Mods page: https://www.nexusmods.com/games/humanitz/mods/171
-- **Current release: [client 1.0.8, server Native 1.0.10, server Pak-Only 1.1.2](https://github.com/Lionademais/humanitz-npc-community-fix/releases/tag/v1.1.2)**,
-  for the HumanitZ update of 2026-10-30 (HumanitZ 1.1X)
+- **Current release: [client 1.0.9, server Native 1.0.11, server Pak-Only 1.1.3](https://github.com/Lionademais/humanitz-npc-community-fix/releases/tag/v1.1.3)**,
+  for the HumanitZ update of 2026-11-12, plus an optional camera compatibility patch
+- Companion mod: [NPC Expansion](https://github.com/Lionademais/humanitz-npc-expansion) (Nexus mod 180). On dedicated
+  servers it runs on top of this mod.
 
 ## Downloads: one client, two server options
 
-Players install the **client 1.0.8**. The server owner installs **only one** of the two server options. The client
+Players install the **client 1.0.9**. The server owner installs **only one** of the two server options. The client
 is the same for both: the server number goes up when only the server changes.
 
-| | Server Pak-Only 1.1.2 | Server Native 1.0.10 |
+| | Server Pak-Only 1.1.3 | Server Native 1.0.11 |
 |---|---|---|
 | Where to download | Nexus Mods and this repository | **Only this repository** |
 | Files | Three pak files (`.pak/.ucas/.utoc`), one zip for Linux and one for Windows | Pak files plus the native fix: `hzcommfix.so` (Linux), `humanitz_npc_patcher.ps1` (Windows), Python patcher and source in `extras/` |
@@ -30,7 +32,17 @@ like these are held by the automatic security checks of Nexus Mods for a manual 
 time. To keep the Nexus page clean and its files available, Nexus only hosts files that are plain Unreal Engine paks
 (the client and the Pak-Only server). The Native option is distributed here, next to its full source code.
 
-## What's new since 1.0.3
+## What's new in this release
+
+- **Updated for the HumanitZ update of 2026-11-12** (client 26602321, Linux server 26602664, Windows server 26604244).
+  Same features as before, rebuilt on the game's new assets. Client and server both need this version: the previous
+  one does not work with the new game build (on Linux, the start lock of `hzcommfix.so` refuses the old `.sig`).
+- **Optional camera compatibility patch (client only):** for players who also use "Player and Vehicle Camera -
+  Unlocked" by XEM122. See [Camera compatibility patch](#camera-compatibility-patch-optional).
+- `hzcommfix.so` and the patchers are unchanged; the game executables are the same as on 2026-10-30, so the Windows
+  check below still applies.
+
+## What changed since 1.0.3
 
 - **New Pak-Only server option (1.1.0 to 1.1.2):** works without touching the game executable, on Linux and Windows.
 - **Clan communities (1.0.7):** clan mates share the community. The owner is stored on the base itself and checked
@@ -38,8 +50,7 @@ time. To keep the Nexus page clean and its files available, Nexus only hosts fil
 - **Fixed players being disconnected after many hours on the server (1.0.8):** two internal sync lists grew every
   2 seconds and, above 65,535 entries, the server dropped the player.
 - **World protection in `hzcommfix.so` (1.0.4, Native on Linux):** start lock, backup vault and repair.
-- **Updated for the HumanitZ update of 2026-10-30** (client 26333407, Linux server 26333826, Windows server 26335264).
-  The server paks are back in the IoStore format (`.pak/.ucas/.utoc`) required by the new server build.
+- **IoStore format (1.0.4):** the server paks use `.pak/.ucas/.utoc`, required by the server builds since 2026-10-30.
 - **Extension points for other mods (1.0.9 to 1.0.10 / 1.1.1 to 1.1.2):** actor tags that choose which chests the
   community members use, and chests reserved for one member. Without those tags nothing changes.
 
@@ -124,15 +135,15 @@ What `hzcommfix.so` (source: `shim/hzcommfix.c`) does, only inside the `HumanitZ
 The patchers are plain-text scripts, keep a `.bak` copy of the executable and can restore it. They download nothing
 and use no network. There is no `.bat`, `.exe` or `-ExecutionPolicy Bypass`.
 
-Windows check (server build 26335264): `Get-FileHash HumanitZServer-Win64-Shipping.exe -Algorithm SHA1` gives
+Windows check (server build 26604244, same executable as build 26335264): `Get-FileHash HumanitZServer-Win64-Shipping.exe -Algorithm SHA1` gives
 `807C8B35BF3A122EB7CE87412C5AA57B7508D37F` for the original executable and `45D1548E3F84850B1324FD0B4C1A4CDFFBCB3FA6`
 with step 2 (`74 0A` -> `EB 0C` at offset `0xE634B0`).
 
 ## Installing
 
 Step-by-step instructions (English + Portuguese) are in the README inside each zip:
-`release/cliente/LEIA-ME_README.txt`, `release/servidor/LEIA-ME_README.txt` (Native) and
-`release/pakonly/LEIA-ME_README.txt` (Pak-Only).
+`release/cliente/LEIA-ME_README.txt`, `release/servidor/LEIA-ME_README.txt` (Native),
+`release/pakonly/LEIA-ME_README.txt` (Pak-Only) and `release/camera/LEIA-ME_README.txt` (camera patch).
 
 - **Client:** Vortex, or copy `NPCCommunityFix_Client_P.pak` to `HumanitZ\Content\Paks\~mods` (only one copy).
 - **Pak-Only:** stop the server and extract the zip for your OS into the server root (the folder that contains
@@ -143,6 +154,22 @@ Step-by-step instructions (English + Portuguese) are in the README inside each z
   path of `hzcommfix.so` on Linux (AMP: `App.EnvironmentVariables` in `GenericModule.kvp`), or run
   `humanitz_npc_patcher.ps1` on Windows (again after every game update).
 
+## Camera compatibility patch (optional)
+
+For players who use the NPC Mechanics client **and** "Player and Vehicle Camera - Unlocked" by XEM122 (Nexus HumanitZ
+mod 106). Both replace the same game file (`BP_CharacterBase`), so only one of them works; the camera mod's file is
+also a copy of the character from before the game's NPC update, which loses the follow and command wheel of NPCs.
+
+- `NPCMechanics_CameraFreedomPatch_v1.0.9.zip` is the `BP_CharacterBase` of client 1.0.9 with only the on-foot camera
+  changes of that mod: pitch limits -89/89 (the camera can look up to the horizon), `CameraTilt` 0 and
+  `OutDoorAngle` -5. No network changes; the server needs nothing.
+- Install: put `NPCMechanics_CameraFreedomPatch_9_P.pak` in `HumanitZ\Content\Paks\~mods` and remove
+  `PlayerCameraFreedom_P.pak`. The vehicle camera file of mod 106 can stay; it does not conflict.
+- Requires client **1.0.9**: the patch is built on that exact file. When the client changes, a patch with the same
+  version number follows.
+- Credits: the idea and the camera values are by XEM122. No file from that mod is used, only the game's and this mod's.
+- Checked in the code; not tested in game yet.
+
 ## The `.pak` files
 
 The paks contain only Unreal Engine 4.27 assets (Blueprints and UI widgets) edited from the game's own assets, plus
@@ -151,9 +178,9 @@ they are not committed to this repository; they are distributed in the release z
 
 | Package | Assets replaced |
 |---|---|
-| Client 1.0.8 | `BP_HMZQuestComp`, `UI_HMZQuest`, `UI_CommunityTab`, `UI_CommunityMemberInfo`, `UI_PreTaskInfo`, `UI_CommunityMember`, `BP_BaseInteractActor`, `BPK_CommunityBaseLevel1`, `BP_CharacterBase` |
-| Server Native 1.0.10 | `BP_HMZQuestComp`, `BP_GameStateBase`, `BP_GameModeSave`, `BP_BaseInteractActor`, `BPK_CommunityBaseLevel1`, `C-Building`, `BP_Recruit_NPC` |
-| Server Pak-Only 1.1.2 | The 7 of the Native option + `BP_CharacterBase`, `BP_HmzPlayerController`, `BP_KaiHumanAI_Base`, `BP_NPCHelper`, `BT_NPC_CheckVitals`, `BT_NPC_HandleTasks`, and the new asset `/Game/Mods/NPCMechanics/NPCM_Relogio` |
+| Client 1.0.9 | `BP_HMZQuestComp`, `UI_HMZQuest`, `UI_CommunityTab`, `UI_CommunityMemberInfo`, `UI_PreTaskInfo`, `UI_CommunityMember`, `BP_BaseInteractActor`, `BPK_CommunityBaseLevel1`, `BP_CharacterBase` |
+| Server Native 1.0.11 | `BP_HMZQuestComp`, `BP_GameStateBase`, `BP_GameModeSave`, `BP_BaseInteractActor`, `BPK_CommunityBaseLevel1`, `C-Building`, `BP_Recruit_NPC` |
+| Server Pak-Only 1.1.3 | The 7 of the Native option + `BP_CharacterBase`, `BP_HmzPlayerController`, `BP_KaiHumanAI_Base`, `BP_NPCHelper`, `BT_NPC_CheckVitals`, `BT_NPC_HandleTasks`, and the new asset `/Game/Mods/NPCMechanics/NPCM_Relogio` |
 
 ## Building
 
@@ -186,6 +213,16 @@ server) have not been published here yet. See the 1.0.3 instructions in the
 `SHA256SUMS.txt` lists the SHA-256 of every release zip and of every file inside them.
 
 ## Changelog
+
+### Client 1.0.9, Server Native 1.0.11 and Server Pak-Only 1.1.3 (2026-11-12): game update
+
+- Updated for the HumanitZ update of 2026-11-12 (client 26602321; Linux server 26602664; Windows server 26604244).
+  Same features as the previous version, rebuilt on the game's new assets (`BP_CharacterBase`, `BP_GameModeSave`,
+  `BP_GameStateBase`, `BP_Recruit_NPC` and `C-Building` changed in the game).
+- Client and server both need this version: the previous one does not work with the new game build.
+- `hzcommfix.so` and the patchers are the same as before; the game executables did not change, so the Windows patch
+  is the same.
+- New optional camera compatibility patch 1.0.9 (client only).
 
 ### Server Native 1.0.10 and Server Pak-Only 1.1.2 (2026-11-05), client stays 1.0.8
 
