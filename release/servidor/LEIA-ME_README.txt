@@ -1,4 +1,4 @@
-HumanitZ - NPC Mechanics on Dedicated Server (antes/formerly: NPC Community Dedicated Fix) - Dedicated Server, native 1.0.10
+HumanitZ - NPC Mechanics on Dedicated Server (antes/formerly: NPC Community Dedicated Fix) - Dedicated Server, native 1.0.11
 ============================================================================================================================
 
 PORTUGUES
@@ -67,8 +67,8 @@ Observacoes
 - Comunidades criadas antes do mod em servidor dedicado nunca foram registradas: desmonte a Base da Comunidade e
   construa de novo depois de instalar.
 - Desinstalar: remova o pak e o LD_PRELOAD (ou restaure o executavel pelo patcher / valide os arquivos do servidor).
-- Versoes: este servidor nativo 1.0.10 usa o cliente 1.0.8 (o mesmo da pak-only 1.1.2). O numero do servidor sobe
-  quando so ele muda: nao existe cliente 1.0.10. Todos os jogadores precisam do cliente 1.0.8.
+- Versoes: este servidor nativo 1.0.11 usa o cliente 1.0.9 (o mesmo da pak-only 1.1.3). O numero do servidor sobe
+  quando so ele muda: nao existe cliente 1.0.11. Todos os jogadores precisam do cliente 1.0.9.
 
 ENGLISH
 -------
@@ -135,5 +135,5 @@ Notes
 - Communities created on a dedicated server before this mod were never registered: dismantle the Community Base
   and build it again after installing.
 - Uninstall: remove the pak and the LD_PRELOAD (or restore the executable with the patcher / validate server files).
-- Versions: this native server 1.0.10 uses client 1.0.8 (the same as pak-only 1.1.2). The server number goes up when
-  only the server changes: there is no 1.0.10 client. Every player needs client 1.0.8.
+- Versions: this native server 1.0.11 uses client 1.0.9 (the same as pak-only 1.1.3). The server number goes up when
+  only the server changes: there is no 1.0.11 client. Every player needs client 1.0.9.
