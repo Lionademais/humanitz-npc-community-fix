@@ -223,6 +223,10 @@ server) have not been published here yet. See the 1.0.3 instructions in the
 - `hzcommfix.so` and the patchers are the same as before; the game executables did not change, so the Windows patch
   is the same.
 - New optional camera compatibility patch 1.0.9 (client only).
+- All download zips are now named `NPCMechanics_*` (same mod, one name): the client is
+  `NPCMechanics_Client_v1.0.9.zip` and the Native server is `NPCMechanics_NativeServer_v1.0.11.zip` (previously
+  `NPCCommunityFix_Client_*` and `NPCCommunityFix_DedicatedServer_*`). The game files inside keep their names
+  (`NPCCommunityFix_Client_P.pak`, `NPCCommunityFix_Server_P.*`), so updating replaces the same files.
 
 ### Server Native 1.0.10 and Server Pak-Only 1.1.2 (2026-11-05), client stays 1.0.8
 
