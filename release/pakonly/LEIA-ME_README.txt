@@ -11,12 +11,12 @@ Qual escolher
 - PAK-ONLY (este zip): servidor alugado, ou sem acesso ao executavel e a linha de inicializacao.
   Traz os bugs de tracos do jogo corrigidos, a comunidade continua vivendo sem jogador por perto e o relogio da
   comunidade segue a duracao do dia do servidor (DayDur/NightDur).
-- NATIVA (zip NPCCommunityFix_DedicatedServer): servidor proprio, VPS ou AMP, em que voce controla a inicializacao.
+- NATIVA (zip NPCMechanics_NativeServer): servidor proprio, VPS ou AMP, em que voce controla a inicializacao.
   Usa o codigo do proprio jogo, igual a ele (inclusive nos bugs), e inclui a protecao do mundo do hzcommfix.so.
 - Instale SO UMA das duas.
 
 Jogadores
-- O cliente e o MESMO das duas opcoes: NPCCommunityFix_Client 1.0.9 (um pak, pelo Vortex ou em Paks\~mods).
+- O cliente e o MESMO das duas opcoes: NPCMechanics_Client 1.0.9 (um pak, pelo Vortex ou em Paks\~mods).
   Servidor pak-only 1.1.3 ou nativo 1.0.11, cliente 1.0.9: o numero do servidor sobe quando so ele muda.
 
 Este zip vale para UM sistema. Use o do seu servidor:
@@ -59,12 +59,12 @@ Which one to pick
 - PAK-ONLY (this zip): rented server, or no access to the executable and the startup command line.
   Ships with the game's trait bugs fixed, communities keep living while no player is around, and the community clock
   follows the server's day length (DayDur/NightDur).
-- NATIVE (NPCCommunityFix_DedicatedServer zip): your own machine, VPS or AMP, where you control the startup.
+- NATIVE (NPCMechanics_NativeServer zip): your own machine, VPS or AMP, where you control the startup.
   Runs the game's own code, exactly like the game (bugs included), and includes the world protection of hzcommfix.so.
 - Install ONLY ONE of them.
 
 Players
-- The client is the SAME for both options: NPCCommunityFix_Client 1.0.9 (one pak, via Vortex or in Paks\~mods).
+- The client is the SAME for both options: NPCMechanics_Client 1.0.9 (one pak, via Vortex or in Paks\~mods).
   Pak-only server 1.1.3 or native server 1.0.11, client 1.0.9: the server number goes up when only the server changes.
 
 This zip is for ONE operating system. Use the one that matches your server:
