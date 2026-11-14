@@ -6,7 +6,7 @@ dedicated servers, with the server as the single source of truth.
 
 - Nexus Mods page: https://www.nexusmods.com/humanitz/mods/171
 - **Current release: [client 1.0.9, server Native 1.0.11, server Pak-Only 1.1.3](https://github.com/Lionademais/humanitz-npc-community-fix/releases/tag/v1.1.3)**,
-  for the HumanitZ update of 2026-11-12, plus an optional camera compatibility patch
+  for HumanitZ 1.1Z (the update of 2026-11-12), plus an optional camera compatibility patch
 - Companion mod: [NPC Expansion](https://github.com/Lionademais/humanitz-npc-expansion) (Nexus mod 180). On dedicated
   servers it runs on top of this mod.
 
@@ -34,7 +34,7 @@ time. To keep the Nexus page clean and its files available, Nexus only hosts fil
 
 ## What's new in this release
 
-- **Updated for the HumanitZ update of 2026-11-12** (client 26602321, Linux server 26602664, Windows server 26604244).
+- **Updated for HumanitZ 1.1Z, the update of 2026-11-12** (client 26602321, Linux server 26602664, Windows server 26604244).
   Same features as before, rebuilt on the game's new assets. Client and server both need this version: the previous
   one does not work with the new game build (on Linux, the start lock of `hzcommfix.so` refuses the old `.sig`).
 - **Optional camera compatibility patch (client only):** for players who also use "Player and Vehicle Camera -
@@ -216,7 +216,7 @@ server) have not been published here yet. See the 1.0.3 instructions in the
 
 ### Client 1.0.9, Server Native 1.0.11 and Server Pak-Only 1.1.3 (2026-11-12): game update
 
-- Updated for the HumanitZ update of 2026-11-12 (client 26602321; Linux server 26602664; Windows server 26604244).
+- Updated for HumanitZ 1.1Z, the update of 2026-11-12 (client 26602321; Linux server 26602664; Windows server 26604244).
   Same features as the previous version, rebuilt on the game's new assets (`BP_CharacterBase`, `BP_GameModeSave`,
   `BP_GameStateBase`, `BP_Recruit_NPC` and `C-Building` changed in the game).
 - Client and server both need this version: the previous one does not work with the new game build.
